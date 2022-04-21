@@ -1,12 +1,16 @@
-name: A workflow for my Hello World file
-on: push
+name: A workflow for Bigeye Deltas
+on:
+  pull_request:
+    branches:
+      - 'deltas-testing'
+env:
+  DEV_DIR: python-scripts
 
 jobs:
-  build:
-    name: Hello world action
+  run-bigeye-deltas:
+    name: run-bigeye-deltas
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: ./action-a
-        with:
-          MY_NAME: "Renee has a great and healthy mother!"
+      - name: Print inverted pyramid
+        run: python ${{ env.DEV_DIR }}/deltas_run.py
+        shell: sh
