@@ -3,11 +3,11 @@ from typing import List
 # import emoji
 
 import requests
-from requests.auth import HTTPBasicAuth
-from pprint import pprint
-#from fuzzywuzzy import process
-from bigeye_sdk.datawatch_client import CoreDatawatchClient
-from bigeye_sdk.model.api_credentials import BasicAuthRequestLibApiConf
+# from requests.auth import HTTPBasicAuth
+# from pprint import pprint
+# #from fuzzywuzzy import process
+# from bigeye_sdk.datawatch_client import CoreDatawatchClient
+# from bigeye_sdk.model.api_credentials import BasicAuthRequestLibApiConf
 
 
 ##### utils functions
@@ -75,59 +75,6 @@ def get_metrics_for_deltas_table(source_table_id: int, auth):
 # this is for creating a brand new delta
 # source: 1567007
 # target: 1567872
-def create_a_delta(source_table_id: int, target_table_id: int, delta_name: str, auth):
-    s_metric_types = get_metrics_for_deltas_table(source_table_id, auth)
-    t_metric_types = get_metrics_for_deltas_table(target_table_id, auth)
-
-    # applicable metrics config for source table
-    s_metric_data = s_metric_types['metricTypes']['applicableMetricTypes']
-
-    column_mappings_val = []
-
-    # iterating over columns over a table
-    for i in range(len(s_metric_data)):
-        merge_metrics = s_metric_types['metricTypes']['applicableMetricTypes'][i]['applicableMetricTypes'] \
-                        + t_metric_types['metricTypes']['applicableMetricTypes'][i]['applicableMetricTypes']
-
-        merge_metrics_nodups = [i for n, i in enumerate(merge_metrics) if i not in merge_metrics[n + 1:]]
-
-        # get two dict[id, tablename] -- insert here
-        column_mappings_val.append({
-            "sourceColumn":
-                {
-                    "id": s_metric_types['metricTypes']['applicableMetricTypes'][i]['column']['id'],
-                    "displayName": s_metric_types['metricTypes']['applicableMetricTypes'][i]['column']['displayName']
-                }
-            ,
-            "targetColumn":
-                {
-                    "id": t_metric_types['metricTypes']['applicableMetricTypes'][i]['column']['id'],
-                    "displayName": t_metric_types['metricTypes']['applicableMetricTypes'][i]['column']['displayName']
-                },
-            "metrics": merge_metrics_nodups
-
-        })
-
-    new_deltas_conf = {
-        "sourceTableId": source_table_id,
-        "targetTableId": target_table_id,
-        "name": delta_name,
-        "columnMappings": column_mappings_val
-    }
-
-    json_payload_create_deltas = {"comparisonTableConfiguration": new_deltas_conf}
-
-    # return json_payload_create_deltas
-    response = requests.post("https://app.bigeye.com/api/v1/metrics/comparisons/tables",
-                             json=json_payload_create_deltas, auth=auth)
-
-    # return new_deltas_conf['columnMappings']
-    return json_payload_create_deltas
-    # if response.status_code == 200:
-    #     return response
-    # else:
-    #     return "Delta can't be created."
-
 
 def run_a_delta(delta_id: int, auth):
     url = "https://app.bigeye.com/api/v1/metrics/comparisons/tables/run/" + str(delta_id)
