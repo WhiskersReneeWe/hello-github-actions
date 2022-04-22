@@ -1,6 +1,6 @@
 name: A workflow for Bigeye Deltas
 on:
-  pull_request:
+  push:
     branches:
       - 'deltas-testing'
 env:
@@ -11,6 +11,11 @@ jobs:
     name: run-bigeye-deltas
     runs-on: ubuntu-latest
     steps:
+      - name: Check-out current repository
+        uses: actions/checkout@v2
+        with:
+          repository: WhiskersReneeWe/hello-github-actions
+
       - name: Print inverted pyramid
         run: python ${{ env.DEV_DIR }}/deltas_run.py
         shell: sh
