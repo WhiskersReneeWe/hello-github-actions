@@ -1,6 +1,6 @@
 name: A workflow for Bigeye Deltas
 on:
-  pull_request:
+  push:
     branches:
       - 'deltas-testing'
 env:
