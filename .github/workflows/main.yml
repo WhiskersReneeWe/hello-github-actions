@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - 'deltas-testing'
+    workflow_dispatch:
 env:
   DEV_DIR: python-scripts
 
