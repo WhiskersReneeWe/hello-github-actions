@@ -5,7 +5,7 @@ from typing import List
 import requests
 from requests.auth import HTTPBasicAuth
 from pprint import pprint
-from fuzzywuzzy import process
+#from fuzzywuzzy import process
 from bigeye_sdk.datawatch_client import CoreDatawatchClient
 from bigeye_sdk.model.api_credentials import BasicAuthRequestLibApiConf
 
